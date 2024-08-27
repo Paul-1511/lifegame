@@ -1,0 +1,26 @@
+#
+# rgl layout text file (v4.0) - raygui layout file generated using rGuiLayout
+#
+# Number of controls:     13
+#
+# Ref. window:    r <x> <y> <width> <height>
+# Anchor info:    a <id> <name> <posx> <posy> <enabled>
+# Control info:   c <id> <type> <name> <rectangle> <anchor_id> <text>
+#
+r 0 40 -1 -1
+a 001 BottomAnchor 504 736 1
+a 002 TopleftAnchor 24 32 1
+a 003 ToprightAnchor 680 32 1
+c 000 18 Progress -312 56 624 24 1 
+c 001 15 Speed -72 24 144 24 1 
+c 002 5 Next 80 24 48 24 1 NEXT
+c 003 5 Prev -136 24 56 24 1 PREV
+c 004 5 Play -48 72 96 24 1 PLAY
+c 005 14 Xcord 24 32 72 16 2 X 
+c 006 14 Ycord 120 32 72 16 2 Y 
+c 007 14 Zcord 216 32 72 16 2 Z 
+c 008 1 GroupBoxSpaceData 0 24 304 32 2 CORDINATES
+c 009 1 GroupBoxGameData 0 24 304 32 3 SACE
+c 010 14 Cells 48 32 120 16 3 CELLS 
+c 011 14 Grids 216 32 72 16 3 GRIDS 
+c 012 19 Status 0 0 1008 32 0 LIFE

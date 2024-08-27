@@ -1,0 +1,99 @@
+#include <raylib.h>
+#include <rlgl.h>
+#include <stdio.h>
+#include <omp.h>
+
+#include "life.h"
+#include "parse.h"
+
+#define RAYMATH_IMPLEMENTATION
+#include "raymath.h"
+
+#define RAYGUI_IMPLEMENTATION
+#include "../thirdparty/raygui.h"
+
+#define INTERFACE_IMPLEMENTATION
+#include "interface.h"
+
+#define FPS 60
+#define WIN_WIDTH 1008
+#define WIN_HEIGHT 1008
+#define MAX_GRID_SIZE 100000
+const char *styles[] = { "data/raygui/terminal.rgs", "data/raygui/dark.rgs" };
+enum { PAUSE, PLAY };
+
+Grid grid = {};
+
+/* ---- Draw Functions ---- */
+void dgrid()
+{
+  rlPushMatrix();
+  rlTranslatef(0, MAX_GRID_SIZE/25, 0);
+  rlRotatef(90, 1, 0, 0);
+  DrawGrid(MAX_GRID_SIZE, 1);
+  rlPopMatrix();
+}
+
+/* ---- Control Structure --- */
+void control(GuiInterfaceState *state, int gamestate, int camspeed, Camera2D *cam)
+{
+  /* Gui */
+  if (gamestate) {
+    if (state->ProgressValue != 1) {
+      state->ProgressValue += 0.5/FPS;
+    } else {
+      state->ProgressValue = 0;
+    }
+  }
+  
+  state->XcordValue = cam->offset.x;
+  state->YcordValue = cam->offset.y;
+  
+  if (state->NextPressed);
+
+  /* Cam */
+  if (IsKeyDown(KEY_W)) cam->offset.y += camspeed;
+  if (IsKeyDown(KEY_A)) cam->offset.x += camspeed;
+  if (IsKeyDown(KEY_S)) cam->offset.y -= camspeed;
+  if (IsKeyDown(KEY_D)) cam->offset.x -= camspeed;
+  cam->zoom -= GetMouseWheelMove();
+
+  /* Mouse */
+  if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    /* setsell(cam->offset.x); */
+  }
+}
+
+/* ---- Entry Point ---- */
+int main()
+{
+  GuiInterfaceState state;
+  Camera2D cam = { {WIN_HEIGHT/2, WIN_WIDTH/2}, {0, 0}, 0, 40 };
+  int gamestate;
+  float zoom;
+  
+  /* ---- Window Parameters ---- */
+  InitWindow(WIN_WIDTH, WIN_HEIGHT, "GAME OF LIFE");
+  GuiLoadStyle(styles[1]);
+  state = InitGuiInterface();
+  SetTargetFPS(FPS);
+  
+  while (!WindowShouldClose()) {
+
+    /* Call control structure */
+    if (state.PlayPressed) gamestate ^= PLAY;
+    control(&state, gamestate, 10, &cam);
+
+    /* ---- Draw ---- */
+    BeginDrawing();
+    BeginMode2D(cam);
+    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+    dgrid();
+    /* evolve(); */
+    EndMode2D();
+    GuiInterface(&state);
+    EndDrawing();
+  }
+  CloseWindow();
+  return 0;
+}
